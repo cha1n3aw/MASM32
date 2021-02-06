@@ -1,0 +1,10 @@
+
+lab_0/.vs/
+lab_1/.vs/
+lab_2/.vs/
+lab_0/Debug/
+lab_1/Debug/
+lab_2/Debug/
+*.filters
+
+*.user
