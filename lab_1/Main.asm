@@ -3,11 +3,7 @@
 
 option casemap : none
 
-includelib \masm32\lib\kernel32.lib ;used in all examples
-
-STDOH EQU -11
-ASCIIOFFSET EQU 48
-RANDOMNUMBER EQU 12345
+includelib \masm32\lib\kernel32.lib
 
 GetStdHandle      PROTO    :DWORD
 WriteConsoleA     PROTO    :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
@@ -16,12 +12,12 @@ Sleep             PROTO    :DWORD
 
 .data
     msglength dd 0
-    numberstring db 256 dup(0) ;max length 256 and all are zeroed
+    numberstring db 256 dup(0)
 
 .code
 WriteToConsole PROC
     LOCAL ConsoleOutputHandle :DWORD
-    invoke GetStdHandle, STDOH
+    invoke GetStdHandle, -11
     mov ConsoleOutputHandle, eax
     .while msglength > 0
         mov edx, offset numberstring
@@ -40,11 +36,11 @@ ConvertToString PROC number:DWORD
         mov eax, number
         mov ecx, 10
         div ecx
-        mov number, eax                 ;save the result
-        mov ebx, offset numberstring    ;ebx now stores the pointer to string
+        mov number, eax
+        mov ebx, offset numberstring
         add ebx, msglength
-        add dl, ASCIIOFFSET
-        mov [ebx], dl                   ;move number (1 byte) to string
+        add dl, 48
+        mov [ebx], dl
         add msglength, 1
         mov eax, number
     .endw
@@ -52,7 +48,7 @@ ConvertToString PROC number:DWORD
 ConvertToString ENDP
 
 Main PROC
-    invoke ConvertToString, RANDOMNUMBER
+    invoke ConvertToString, 12345
     invoke WriteToConsole
     invoke Sleep, 4000
     invoke ExitProcess, 0

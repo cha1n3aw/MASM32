@@ -1,0 +1,16 @@
+﻿  Assembling Main.asm...
+Main.asm(1): error A2008: syntax error : .
+Main.asm(2): error A2008: syntax error : .
+Main.asm(24): error A2008: syntax error : invoke
+Main.asm(26): error A2008: syntax error : .
+Main.asm(30): error A2008: syntax error : WriteConsoleA
+Main.asm(31): error A2008: syntax error : .
+Main.asm(38): error A2008: syntax error : while
+Main.asm(50): error A2008: syntax error : .
+Main.asm(55): error A2008: syntax error : invoke
+Main.asm(56): error A2008: syntax error : invoke
+Main.asm(57): error A2008: syntax error : invoke
+Main.asm(58): error A2008: syntax error : invoke
+Main.asm(60): error A2008: syntax error : Main
+Main.asm(60): error A2088: END directive required at end of file
+F:\VS19\MSBuild\Microsoft\VC\v160\BuildCustomizations\masm.targets(70,5): error MSB3721: The command "ml64.exe /c /nologo /Zi /Fo"x64\Debug\Main.obj" /W3 /errorReport:prompt  /TaMain.asm" exited with code 1.

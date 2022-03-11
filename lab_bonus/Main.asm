@@ -17,7 +17,9 @@ Sleep             PROTO    :DWORD
     CRLF db 13,10
 
 .data
-    arr db 100,90,80,70,60,50,40,30,20,10
+    arr1 db 100,90,80,70,60,50,40,30,20,10 ;can be either db, dw or dd
+    arr2 dw 1,2,3,4,5,6,7,8,9,10 ;can be either db, dw or dd
+    arr3 dd 10 dup (0) ;can be either db, dw or dd
 
 .code
 WriteNum PROC uses eax ebx edx ecx number :DWORD
@@ -165,7 +167,7 @@ writeword:
         add eax, arrptr
         mov dx, [eax]
         movsx eax, dx
-        invoke WriteLineNum, eax
+        invoke WriteLineNum, [eax]
         inc ecx
         cmp ecx, arrlength 
         jl writeword
@@ -175,7 +177,7 @@ writebyte:
         add eax, arrptr
         mov dl, [eax]
         movsx eax, dl
-        invoke WriteLineNum, eax
+        invoke WriteLineNum, [eax]
         inc ecx
         cmp ecx, arrlength 
         jl writebyte
@@ -185,55 +187,50 @@ ifend:
     ret
 WriteLineArray ENDP
 
-BubbleSort PROC arrptr:DWORD, arrsize:DWORD, arrlength:DWORD
-    local changed :SBYTE
-    local elementsize :SBYTE
+SumArrays PROC arr1ptr:DWORD, arr1size:DWORD, arr1length:DWORD, arr2ptr:DWORD, arr2size:DWORD, arr2length:DWORD, arr3ptr:DWORD, arr3size:DWORD, arr3length:DWORD
+    local arr1itemsize dd
+    local arr2itemsize dd
+    local arr3itemsize dd
     xor eax, eax
-    mov changed, al
+    xor ebx, ebx
+    xor ecx, ecx
     xor edx, edx
-    mov eax, arrsize
-    mov ebx, arrlength
+    mov eax, arr3size
+    mov ebx, arr3length
     div ebx
-    mov elementsize, al
-bubbleloop:
-        xor ecx, ecx
-        xor eax, eax
-        xor ebx, ebx
-        xor edx, edx
-        mov changed, al
-    comparetwo:
-            movsx eax, elementsize
-            mul ecx
-            add eax, arrptr
-            mov ebx, eax
-            movsx edx, elementsize
-            add eax, edx
-            mov edi, [eax]
-            mov esi, [ebx]
-            cmp edi, esi
-            jg nochanges
-            mov edx, edi
-            mov [eax], esi
-            mov [ebx], edx
-            mov al, 1
-            mov changed, al
-        nochanges:
-            inc ecx
-            mov eax, arrlength
-            add eax, -1
-            cmp ecx, eax
-            jl comparetwo
-        cmp changed, 1
-        je bubbleloop
+    mov eax, arr3itemsize
+    mov ecx, eax
+    xor edx, edx
+    mov eax, arr1size
+    mov ebx, arr1length
+    div ebx
+    mov eax, arr1itemsize
+    cmp ecx, eax
+    jl greatersource
+    xor edx, edx
+    mov eax, arr2size
+    mov ebx, arr2length
+    div ebx
+    mov eax, arr2itemsize
+    cmp ecx, eax
+    jl greatersource
+
+
+
+greatersource:
+    warning_message db "Warning: source arrays are greater than destination array! The result will be truncated to the size of a destination array!",0
+
+
     xor eax, eax
     ret
-BubbleSort ENDP
+SumArrays ENDP
 
 Main PROC
-    invoke GetAvg, offset arr, sizeof arr, lengthof arr
-    invoke WriteLineArray, offset arr, sizeof arr, lengthof arr
-    invoke BubbleSort, offset arr, sizeof arr, lengthof arr
-    invoke WriteLineArray, offset arr, sizeof arr, lengthof arr
+        ;all three arrays could be both local (on stack) and global (in memory)
+        ;locals should be passed as a lea instead of an offset
+    invoke SumArrays, offset arr1, sizeof arr1, lengthof arr1, offset arr2, sizeof arr2, lengthof arr2, offset arr3, sizeof arr3, lengthof arr3
+    invoke WriteLineArray, offset arr3, sizeof arr3, lengthof arr3
+    invoke GetAvg, offset arr3, sizeof arr3, lengthof arr3
     invoke Sleep, 5000
     invoke ExitProcess, 0
 Main ENDP 

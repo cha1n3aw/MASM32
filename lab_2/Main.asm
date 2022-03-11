@@ -5,10 +5,6 @@ option casemap : none
 
 includelib \masm32\lib\kernel32.lib ;used in all examples
 
-RANDOMNUMBER EQU -12345
-STDOH EQU -11
-ASCIIOFFSET EQU 48
-
 GetStdHandle      PROTO    :DWORD
 WriteConsoleA     PROTO    :DWORD,:DWORD,:DWORD,:DWORD,:DWORD
 ExitProcess       PROTO    :DWORD
@@ -17,14 +13,14 @@ Sleep             PROTO    :DWORD
 .data
     signed db 0
     msglength dd 0
-    numberstring db 256 dup(0)          ;max length 256 and all are zeroed
+    numberstring db 256 dup(0)        
 
 .code
 WriteToConsole PROC
     LOCAL consoleOutHandle :DWORD
     invoke GetStdHandle, STDOH
     mov consoleOutHandle, eax
-    .if signed > 0                      ;also could be text eax, eax & js somewhere
+    .if signed > 0                      
         mov edx, offset signed
         invoke WriteConsoleA, consoleOutHandle, edx, 1, 0, 0
     .endif
